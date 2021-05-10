@@ -1,0 +1,13 @@
+note over selain:
+Selain lukee tekstikentän
+arvon ja lähettää sen palvelimelle
+JSON-muodossa
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: Status-koodi 201 vastaus "note created" JSON-muodossa
+
+note over selain:
+Selain suorittaa tapahtumankäsittelijän
+joka renderöi muistiinpanot näytölle
+end note
