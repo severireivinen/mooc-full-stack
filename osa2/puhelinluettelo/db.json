@@ -19,6 +19,16 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "Severi Reivinen",
+      "number": "050-561-6073",
+      "id": 5
+    },
+    {
+      "name": "Kasperi Reivinen",
+      "number": "050-575-3778",
+      "id": 6
     }
   ]
 }
