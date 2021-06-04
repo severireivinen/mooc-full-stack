@@ -43,7 +43,12 @@ const App = () => {
         }, 3000)
       })
       .catch(error => {
-        alert('error with adding new person', error)
+        setNewMessage(
+          { display: `${error.response.data.error}`, isError: true }
+        )
+        setTimeout(() => {
+          setNewMessage(null)
+        }, 3000)
       })
     setNewName('')
     setNewNumber('')
