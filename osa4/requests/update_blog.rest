@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/60be336d8d321b32406c55fc
+Content-Type: application/json
+
+{
+    "title": "Updated Blog",
+    "author": "Pekka Pouta",
+    "url": "www.pekka.com",
+    "likes": 22
+}
