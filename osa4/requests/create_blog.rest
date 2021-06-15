@@ -1,9 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwYzg5NTc2ZDJiMTUyNDRjMGI5MTFlMyIsImlhdCI6MTYyMzc2NjIzN30.nXPZYKM64iGfr2pB9Ml7waeXIvljDElIE3EHWWvygII
 
 {
-    "title": "Test Blog",
-    "author": "Severi reivinen",
-    "url": "www.example.com",
-    "likes": 21
+    "title": "Token Test Part Four",
+    "author": "Superuser",
+    "url": "www.tokenunleashedFour.com",
+    "likes": 7,
+    "userId": "60c89576d2b15244c0b911e3"
 }
