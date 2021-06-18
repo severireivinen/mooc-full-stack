@@ -24,25 +24,25 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      setUser(user)
+      const loggedUser = JSON.parse(loggedUserJSON)
+      blogService.setToken(loggedUser.token)
+      setUser(loggedUser)
     }
   }, [])
 
   const handleLogin = async (credentials) => {
     try {
-      const user = await loginService.login(credentials)
+      const loggingUser = await loginService.login(credentials)
 
       window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
+        'loggedBlogappUser', JSON.stringify(loggingUser)
       )
 
-      blogService.setToken(user.token)
-      setUser(user)
+      blogService.setToken(loggingUser.token)
+      setUser(loggingUser)
 
       setNewMessage(
-        { display: `Welcome back ${user.name}`, isError: false }
+        { display: `Welcome back ${loggingUser.name}`, isError: false }
       )
       setTimeout(() => {
         setNewMessage(null)
@@ -157,8 +157,8 @@ const App = () => {
 
           {blogs.map(blog =>
             <Blog key={blog.id}
-              blog={blog}
               user={user}
+              blog={blog}
               handleLike={() => updateLikes(blog.id)}
               handleRemove={() => removeBlog(blog.id)}
             />
