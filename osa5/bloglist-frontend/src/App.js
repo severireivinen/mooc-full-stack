@@ -6,20 +6,20 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Blog from './components/Blog'
+import { useDispatch, useSelector } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog, likeBlog, deleteBlog } from './reducers/blogsReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  const [newMessage, setNewMessage] = useState(null)
+  const dispatch = useDispatch()
 
-  const isError = newMessage === null ? null : newMessage.isError
+  const [user, setUser] = useState(null)
+  const blogs = useSelector(state => state.blogs)
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(initialBlogs =>
-      setBlogs(initialBlogs)
-    )
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -41,97 +41,36 @@ const App = () => {
       blogService.setToken(loggingUser.token)
       setUser(loggingUser)
 
-      setNewMessage(
-        { display: `Welcome back ${loggingUser.name}`, isError: false }
-      )
-      setTimeout(() => {
-        setNewMessage(null)
-      }, 3000)
+      dispatch(setNotification(`Welcome back ${loggingUser.name}`, 3))
     } catch (exception) {
-      setNewMessage(
-        { display: 'Wrong username or password', isError: true }
-      )
-      setTimeout(() => {
-        setNewMessage(null)
-      }, 3000)
+      dispatch(setNotification('Wrong username or password', 3))
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    setNewMessage(
-      { display: `Bye bye ${user.name}`, isError: false }
-    )
+    dispatch(setNotification(`Bye bye ${user.name}`, 3))
     setTimeout(() => {
-      setNewMessage(null)
       window.location.reload()
-    }, 1500)
+    }, 3000)
   }
-
   const addBlog = blogObject => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewMessage(
-          { display: `a new blog ${returnedBlog.title} by ${user.name} added`, isError: false }
-        )
-        setTimeout(() => {
-          setNewMessage(null)
-        }, 5000)
-      })
-      .catch(() => {
-        setNewMessage(
-          { display: 'please login again', isError: true }
-        )
-        setTimeout(() => {
-          setNewMessage(null)
-        }, 3000)
-      })
+    try {
+      dispatch(createBlog(blogObject))
+      dispatch(setNotification(`a new blog ${blogObject.title} by ${user.name} added`, 3))
+    } catch (error) {
+      dispatch(setNotification('please login again', 3))
+    }
   }
 
-  const updateLikes = id => {
-    const blog = blogs.find(b => b.id === id)
-    const changedBlog = { ...blog, likes: blog.likes + 1 }
-
-    blogService
-      .update(id, changedBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog))
-      })
-      .catch(() => {
-        setNewMessage(
-          { display: 'blog was already deleted from the server', isError: true }
-        )
-        setTimeout(() => {
-          setNewMessage(null)
-        }, 3000)
-      })
+  const removeBlog = blog => {
+    dispatch(deleteBlog(blog))
+    dispatch(setNotification(`removed ${blog.title}`, 3))
   }
 
-  const removeBlog = id => {
-    const blog = blogs.find(b => b.id === id)
-
-    blogService
-      .remove(id, blog)
-      .then(() => {
-        setBlogs(blogs.filter(b => b.id !== id))
-        setNewMessage(
-          { display: 'blog deleted successfully', isError: false }
-        )
-        setTimeout(() => {
-          setNewMessage(null)
-        }, 3000)
-      })
-      .catch(() => {
-        setNewMessage(
-          { display: 'error deleting the blog', isError: true }
-        )
-        setTimeout(() => {
-          setNewMessage(null)
-        }, 3000)
-      })
+  const updateLikes = blog => {
+    dispatch(likeBlog(blog))
   }
 
   const loginForm = () => (
@@ -146,7 +85,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={newMessage} isError={isError} />
+      <Notification />
 
       {user === null ?
         loginForm() :
@@ -159,8 +98,8 @@ const App = () => {
             <Blog key={blog.id}
               user={user}
               blog={blog}
-              handleLike={() => updateLikes(blog.id)}
-              handleRemove={() => removeBlog(blog.id)}
+              handleLike={() => updateLikes(blog)}
+              handleRemove={() => removeBlog(blog)}
             />
           )}
         </div>
