@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Form, Button } from 'react-bootstrap'
 
 const BlogForm = ({ createBlog }) => {
   const [newTitle, setNewTitle] = useState('')
@@ -32,31 +33,30 @@ const BlogForm = ({ createBlog }) => {
   return (
     <div>
       <h2>create new</h2>
-      <form className="blog-form" onSubmit={addBlog}>
-        <div>
-          title:
-          <input
+
+      <Form className='blog-form' onSubmit={addBlog}>
+        <Form.Group>
+          <Form.Label>title:</Form.Label>
+          <Form.Control
             id="blog-title-input"
             value={newTitle}
             onChange={handleTitleChange}
           />
-          <br />
-          author:
-          <input
+          <Form.Label>author:</Form.Label>
+          <Form.Control
             id="blog-author-input"
             value={newAuthor}
             onChange={handleAuthorChange}
           />
-          <br />
-          url:
-          <input
+          <Form.Label>url:</Form.Label>
+          <Form.Control
             id="blog-url-input"
             value={newUrl}
             onChange={handleUrlChange}
           />
-        </div>
-        <button id="create-blog-button" type="submit">create</button>
-      </form>
+          <Button variant='primary' type='submit' id='create-blog-button'>create</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

@@ -22,10 +22,9 @@ const Blog = ({ user, blog, handleLike, handleRemove }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
-        <span className="blog-title">{blog.title}</span> <span className="blog-author">{blog.author}</span> <button onClick={handleViewButton}>{buttonText}</button>
-      </div>
+    <td style={blogStyle}>
+      <span className="blog-title">{blog.title}</span> <span className="blog-author">{blog.author}</span> <button onClick={handleViewButton}>{buttonText}</button>
+
       <div className="details-container" style={showDetails}>
         <ul className="blog-details">
           <li>
@@ -43,7 +42,7 @@ const Blog = ({ user, blog, handleLike, handleRemove }) => {
           <></>
         }
       </div>
-    </div>
+    </td>
   )
 }
 
