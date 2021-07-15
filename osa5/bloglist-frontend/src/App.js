@@ -8,15 +8,16 @@ import { initializeBlogs } from './reducers/blogsReducer'
 import { tokenLogin, logout } from './reducers/usersReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
-import SingleUserView from './components/SingleUserView'
 import { Navbar, Nav } from 'react-bootstrap'
+import { initializeUsers } from './reducers/allUsersReducer'
+
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const user = useSelector(state => state.users)
+  const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
-
+  const users = useSelector(state => state.users)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -26,13 +27,17 @@ const App = () => {
     dispatch(tokenLogin())
   }, [dispatch])
 
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [dispatch])
+
   const handleLogout = () => {
     dispatch(logout())
     dispatch(setNotification('logged out', 3))
   }
 
   const match = useRouteMatch('/users/:id')
-  const singleUser = match ? blogs.find(blog => blog.user.id === Number(match.params.id)) : null
+  const singleUser = match ? users.find(u => u.id === (match.params.id)) : null
 
   const Home = () => (
     <div>
@@ -56,24 +61,32 @@ const App = () => {
         <div>
           <h1>Blog App</h1>
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-          <UserList blogs={blogs} />
+          <UserList users={users} />
         </div>
       }
     </div>
   )
 
-  const User = () => (
+  const User = ({ id }) => (
     <div>
       {user === null ?
         <LoginForm /> :
         <div>
           <h1>Blog App</h1>
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-          <SingleUserView singleUser={singleUser} />
+          <h3>added blogs</h3>
+          <ul>
+            {id.blogs.map(blog =>
+              <li key={blog.id}>{blog.title}</li>
+            )}
+          </ul>
         </div>
       }
     </div>
   )
+
+
+
 
   return (
     <div className='container'>
@@ -94,7 +107,7 @@ const App = () => {
 
       <Switch>
         <Route path='/users/:id'>
-          <User />
+          <User id={singleUser} />
         </Route>
         <Route path='/users'>
           <Users />

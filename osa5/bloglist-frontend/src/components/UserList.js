@@ -1,10 +1,7 @@
 import React from 'react'
-import User from './User'
+import { Link } from 'react-router-dom'
 
-const UserList = ({ blogs }) => {
-  const users = blogs.map(blog => blog.user)
-  const uniqueUsers = Array.from(new Set(users.map(user => user.id))).map(id => (users.find(user => user.id === id)))
-
+const UserList = ({ users }) => {
   return (
     <div>
       <h2>Users</h2>
@@ -14,8 +11,11 @@ const UserList = ({ blogs }) => {
             <th></th>
             <th>blogs created</th>
           </tr>
-          {uniqueUsers.map(user =>
-            <User key={user.id} user={user} userBlogs={[...blogs.filter(blog => blog.user.id === user.id)]} />
+          {users.map(user =>
+            <tr key={user.id}>
+              <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
+              <td>{user.blogs.length}</td>
+            </tr>
           )}
         </tbody>
       </table>

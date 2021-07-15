@@ -1,19 +1,11 @@
 import React from 'react'
 
-const User = ({ user, userBlogs }) => {
-  const blogs = userBlogs.length
+const User = ({ user }) => {
+  console.log(user)
+  return(
+    <div>
 
-  return (
-    <tr>
-      <td>
-        {user.name}
-      </td>
-      <td>
-        {blogs}
-      </td>
-    </tr>
-
-
+    </div>
   )
 }
 
