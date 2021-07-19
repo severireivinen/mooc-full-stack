@@ -1,29 +1,30 @@
-import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
+import { useMutation } from '@apollo/client'
 import { CREATE_BOOK, ALL_BOOKS } from '../queries'
 
-const NewBook = (props) => {
+const NewBook = ({ show, setError }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const [createPerson] = useMutation(CREATE_BOOK, {
+  const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }],
     onError: (error) => {
-      console.log(error.graphQLErrors[0].message)
+      // error.graphQLErrors[0].message IS NOT WORKING
+      setError("Error: check the fields!")
     }
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
   const submit = async (event) => {
     event.preventDefault()
 
-    createPerson({ variables: { title, author, published, genres } })
+    createBook({ variables: { title, author, published, genres } })
 
     setTitle('')
     setPublished('')
