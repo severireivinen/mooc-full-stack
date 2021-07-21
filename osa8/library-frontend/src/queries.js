@@ -11,11 +11,28 @@ query {
 `
 
 export const ALL_BOOKS = gql`
-query {
-    allBooks {
+query allBooks($genre: String) {
+    allBooks(genre: $genre) {
         title,
         published,
-        author
+        author {
+            name
+        }
+    }
+}
+`
+
+export const ALL_GENRES = gql`
+query {
+    allGenres
+}
+`
+
+export const ME = gql`
+query {
+    me {
+        username,
+        favoriteGenre
     }
 }
 `
@@ -29,7 +46,9 @@ mutation createBook($title: String!, $author: String!, $published: Int!, $genres
         genres: $genres
     ) {
         title,
-        author,
+        author {
+            name
+        },
         published,
         genres
     }
@@ -43,4 +62,12 @@ mutation editAuthor($name: String!, $born: Int!) {
         born
     }
 }
+`
+
+export const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password)  {
+      value
+    }
+  }
 `
