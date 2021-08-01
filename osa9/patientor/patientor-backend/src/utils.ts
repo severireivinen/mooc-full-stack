@@ -1,20 +1,22 @@
-import { NewPatientEntry, Gender } from "./types";
+import { NewPatientEntry, Gender, Entry } from "./types";
 
 type Fields = {
     name: unknown,
     dateOfBirth: unknown,
     ssn: unknown,
     gender: unknown,
-    occupation: unknown
+    occupation: unknown,
+    entries: unknown
 };
 
-const toNewPatientEntry = ({ name, dateOfBirth, ssn, gender, occupation }: Fields): NewPatientEntry => {
+const toNewPatientEntry = ({ name, dateOfBirth, ssn, gender, occupation, entries }: Fields): NewPatientEntry => {
     const newEntry: NewPatientEntry = {
         name: parseString(name),
         dateOfBirth: parseDate(dateOfBirth),
         ssn: parseString(ssn),
         gender: parseGender(gender),
-        occupation: parseString(occupation)
+        occupation: parseString(occupation),
+        entries: parseEntryArray(entries)
     };
     return newEntry;
 };
@@ -31,6 +33,13 @@ const parseDate = (date: unknown): string => {
         throw new Error('Incorrect or missing date: ' + date);
     }
     return date;
+};
+
+const parseEntryArray = (entries: unknown): Entry[] => {
+    if (!entries || !isEntryArray(entries)) {
+        throw new Error('Incorrect or missing value: ' + entries);
+    }
+    return entries;
 };
 
 const parseGender = (gender: unknown): Gender => {
@@ -51,6 +60,10 @@ const isDate = (date: string): boolean => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);
+};
+
+const isEntryArray = (a: unknown): a is Entry[] => {
+    return Array.isArray(a) || a instanceof Array;
 };
 
 export default toNewPatientEntry;
